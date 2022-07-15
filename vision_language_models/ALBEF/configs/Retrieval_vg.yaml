@@ -1,0 +1,62 @@
+general:
+  experiment_name: "FT-VG-COCO"
+  _checkpoint_path: "ckpt"
+  seed: 42
+  gpus: [ 1,2,3 ]
+  show_progress_bar: True
+
+trainer:
+  epochs: 10
+  precision: 16
+  alpha: 0.4
+  warm_up: True
+  val_check_interval: 0.5
+  ckpt_path: null
+
+logger:
+  project: "SemanticCaptions"
+  store_checkpoints: False
+  group: "ALBEF"
+  notes: ""
+
+data:
+  dataset: 'coco14+opt'
+  root: '/data/mmssl/coco14'
+  max_words: 50
+  batch_size: [ 64,64 ]
+  num_workers: [ 8, 8 ]
+  kwargs:
+    weight_prompt_by_explainability: True
+    weight_synset_by_score: True
+    positive_synset_threshold: 0.70
+    explainability_threshold: 0.55
+    synsets_per_image: 2
+    prompts_per_synset: 3
+
+model:
+  image_res: 384
+  distill: True
+  embed_dim: 256
+  vision_width: 768
+  temp: 0.07
+  queue_size: 65536
+  momentum: 0.995
+  checkpoint_vit: True
+  checkpoint_bert: True
+
+  bert_config: 'CKA-CLIP/vision_language_models/ALBEF/configs/config_bert.json'
+  cache_dir: '/data/mmssl/transformers'
+  checkpoint_path: '/data/mmssl/transformers/albef_pretrain.pth'
+
+optimizer:
+  opt: adamW
+  lr: 1.e-5
+  weight_decay: 0.02
+
+lr_scheduler:
+  warmup_epochs: 1.0
+  warmup_init_lr: 1.e-5
+  warmup_strategy: 'linear'
+
+
+
